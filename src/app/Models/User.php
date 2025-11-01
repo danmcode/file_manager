@@ -45,4 +45,33 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(
+            User::class,
+            'created_by'
+        );
+    }
+
+    public function updatedBy()
+    {
+        return $this->belongsTo(
+            User::class,
+            'updated_by'
+        );
+    }
+
+    public function files()
+    {
+        return $this->hasMany(
+            File::class
+        );
+    }
+
 }
