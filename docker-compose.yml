@@ -1,0 +1,84 @@
+services:
+  app:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+      args:
+        - PHP_VERSION=8.3
+    container_name: filemanager_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./src:/var/www/html:delegated
+      - uploads:/var/www/html/storage/app/uploads
+      - ./docker/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=${DB_DATABASE:-filemanager}
+      - DB_USERNAME=${DB_USERNAME:-filemanager_user}
+      - DB_PASSWORD=${DB_PASSWORD:-secret}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+    networks:
+      - filemanager_network
+
+  nginx:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    container_name: filemanager_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "5173:5173"
+    volumes:
+      - ./src:/var/www/html:ro
+      - uploads:/var/www/html/storage/app/uploads:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl:ro
+
+    depends_on:
+      - app
+    networks:
+      - filemanager_network
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: filemanager_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${DB_DATABASE:-filemanager}
+      - POSTGRES_USER=${DB_USERNAME:-filemanager_user}
+      - POSTGRES_PASSWORD=${DB_PASSWORD:-secret}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USERNAME:-filemanager_user} -d ${DB_DATABASE:-filemanager}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - filemanager_network
+
+networks:
+  filemanager_network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  uploads:
