@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
 use App\Models\Group;
 use App\Models\Role;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -36,6 +38,18 @@ class UserController extends Controller
             'user.create',
             compact('groups', 'roles')
         );
+    }
+
+    public function store(StoreUserRequest $request, UserService $userService)
+    {
+        $userService->create($request->validated());
+
+        return redirect()
+            ->route('users')
+            ->with(
+                'success',
+                'Usuario creado correctamente.'
+            );
     }
 
     public function getUsers(Request $request)
