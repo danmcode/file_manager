@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StoreUserRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +23,16 @@ class StoreUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-            'role_id' => 'required|exists:roles,id',
-            'group_id' => 'required|exists:groups,id',
-            'quota_limit_mb' => 'required|numeric|min:0|max:1024',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($this->user->id),
+            ],
+            'group_id' => ['required', 'exists:groups,id'],
+            'role_id' => ['required', 'exists:roles,id'],
+            'quota_limit_mb' => ['required', 'numeric', 'min:0'],
+            'password' => ['nullable', 'min:8', 'confirmed'],
         ];
     }
 
@@ -38,9 +43,6 @@ class StoreUserRequest extends FormRequest
             'name.max' => 'El nombre no debe exceder los 255 caracteres',
             'email.required' => 'El correo electrónico es obligatorio.',
             'email.unique' => 'El correo ya está registrado.',
-            'password.required' => 'La contraseña es obligatoria.',
-            'password.confirmed' => 'Las contraseñas no coinciden.',
-            'password.min' => 'La contraseña debe tener al menos 8 caracteres.',
             'group_id.required' => 'El grupo es requerido',
             'role_id.required' => 'Debe seleccionar un rol.',
             'quota_limit_mb.required' => 'La cuota del almacenamiento del usuario es obligatoria',

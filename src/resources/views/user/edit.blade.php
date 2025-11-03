@@ -11,8 +11,9 @@
                     </header>
                     <div class="border-b border-gray-300 w-full mt-2 mb-2"></div>
 
-                    <form method="POST" action="#">
+                    <form method="POST" action="{{ route('users.update', $user->id) }}">
                         @csrf
+                        @method('PATCH')
 
                         <div class="mb-3">
                             <x-input-label for="name" :value="__('Nombre:')" />

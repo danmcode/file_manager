@@ -17,4 +17,14 @@ class UserService
         return User::create($data);
     }
 
+    public function update(User $user, array $data): User
+    {
+        $user = User::findOrFail($user->id);
+
+        $data['updated_by'] = Auth::id();
+        $user->update($data);
+
+        return $user->fresh(['role', 'group']);
+    }
+
 }

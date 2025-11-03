@@ -57,6 +57,16 @@ Route::middleware('auth')
             [UserController::class, 'edit']
         )->name('users.edit');
 
+        Route::patch(
+            '/users/{user}',
+            [UserController::class, 'update']
+        )->name('users.update');
+
+        Route::delete(
+            '/users/{user}',
+            [UserController::class, 'destroy']
+        )->name('users.destroy');
+
 
         Route::get(
             '/users/get',
@@ -67,7 +77,6 @@ Route::middleware('auth')
             '/groups',
             [GroupController::class, 'index']
         )->name('groups');
-
 
         Route::get(
             '/roles',

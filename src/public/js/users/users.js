@@ -4,7 +4,15 @@ const table = document.getElementById('users-table');
 const tbody = table.querySelector('tbody');
 const rowTemplate = document.getElementById('user-row-template');
 const pagination = document.getElementById('pagination');
-const userEditBaseUrl = 'users';
+const userBaseUrl = '/users';
+
+const modal = document.getElementById('delete-modal');
+const userToDeleteSpan = document.getElementById('user-to-delete');
+const cancelDeleteBtn = document.getElementById('cancel-delete');
+
+const getDeleteForm = document.getElementById('delete-user');
+
+let userToDelete = null;
 
 async function loadUsers(page = 1) {
     const response = await customFetch(`/users/get?page=${page}`);
@@ -30,8 +38,17 @@ function renderTable(users) {
         row.querySelector('.user-used').textContent = user.used_space_mb ?? '-';
 
         const userEditLink = row.querySelector('.user-edit');
+        const userDeleteLink = row.querySelector('.user-delete');
+
         if (userEditLink) {
-            userEditLink.href = `${userEditBaseUrl}/${user.id}/edit`;
+            userEditLink.href = `${userBaseUrl}/${user.id}/edit`;
+        }
+
+        if (userDeleteLink) {
+            userDeleteLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                openDeleteModal(user);
+            });
         }
 
         tbody.appendChild(row);
@@ -56,5 +73,19 @@ function renderPagination(paginated) {
         });
     });
 }
+
+function openDeleteModal(user) {
+    userToDelete = user;
+    userToDeleteSpan.textContent = user.name;
+    getDeleteForm.action = `${userBaseUrl}/${user.id}`;
+    modal.classList.remove('hidden');
+}
+
+function closeDeleteModal() {
+    modal.classList.add('hidden');
+    userToDelete = null;
+}
+
+cancelDeleteBtn.addEventListener('click', closeDeleteModal);
 
 document.addEventListener('DOMContentLoaded', () => loadUsers());

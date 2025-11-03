@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\Group;
 use App\Models\Role;
 use App\Models\User;
@@ -50,6 +51,25 @@ class UserController extends Controller
                 'success',
                 'Usuario creado correctamente.'
             );
+    }
+
+    public function update(UpdateUserRequest $request, User $user, UserService $userService)
+    {
+        $updatedUser = $userService->update($user, $request->validated());
+
+        return redirect()
+            ->route('users')
+            ->with('success', "Usuario {$updatedUser->name} actualizado correctamente.");
+    }
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+
+        return redirect()
+            ->route('users')
+            ->with('success', "Usuario: {$user->name} eliminado correctamente.");
     }
 
     public function getUsers(Request $request)
