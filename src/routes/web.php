@@ -141,7 +141,7 @@ Route::middleware('auth')
 
         Route::get(
             '/roles/get',
-            [RoleController::class, 'getUsers']
+            [RoleController::class, 'getRoles']
         )->name('roles.get');
 
     });
