@@ -1,58 +1,55 @@
 import { customFetch } from '../custom.fetch.js';
 
-const usersTable = document.getElementById('users-table');
-const paginationContainer = document.getElementById('pagination');
+const table = document.getElementById('users-table');
+const tbody = table.querySelector('tbody');
+const rowTemplate = document.getElementById('user-row-template');
+const pagination = document.getElementById('pagination');
+const userEditBaseUrl = 'users';
 
 async function loadUsers(page = 1) {
-    const data = await customFetch(`/users?page=${page}`);
-
-    if (data && data.data) {
-        renderHeaders();
-        renderTable(data.data);
-        renderPagination(data);
+    const response = await customFetch(`/users/get?page=${page}`);
+    if (response?.data) {
+        renderTable(response.data);
+        renderPagination(response);
     }
 }
 
-function renderHeaders() {
-    const thead = usersTable.querySelector('thead');
-    thead.innerHTML = `
-        <tr class="bg-gray-100">
-            <th class="p-2 border">Nombre</th>
-            <th class="p-2 border">Email</th>
-            <th class="p-2 border">Grupo</th>
-            <th class="p-2 border">Rol</th>
-            <th class="p-2 border">Cuota (MB)</th>
-            <th class="p-2 border">Uso (MB)</th>
-            <th class="p-2 border">Acciones</th>
-        </tr>
-    `;
-}
-
 function renderTable(users) {
-    const tbody = usersTable.querySelector('tbody');
+    tbody.querySelectorAll('tr:not(#user-row-template)').forEach(row => row.remove());
 
-    tbody.innerHTML = users
-        .map(user => `
-            <tr>
-                <td>${user.name}</td>
-                <td>${user.email}</td>
-                <td>${user.group.name}</td>
-                <td>${user.role.name}</td>
-                <td>${user.quota_limit_mb}</td>
-                <td>${user.used_space_mb}</td>
-            </tr>
-        `)
-        .join('');
+    users.forEach(user => {
+        const row = rowTemplate.cloneNode(true);
+        row.id = '';
+        row.classList.remove('hidden');
+
+        row.querySelector('.user-name').textContent = user.name;
+        row.querySelector('.user-email').textContent = user.email;
+        row.querySelector('.user-group').textContent = user.group?.name ?? '-';
+        row.querySelector('.user-role').textContent = user.role?.name ?? '-';
+        row.querySelector('.user-quota').textContent = user.quota_limit_mb ?? '-';
+        row.querySelector('.user-used').textContent = user.used_space_mb ?? '-';
+
+        const userEditLink = row.querySelector('.user-edit');
+        if (userEditLink) {
+            userEditLink.href = `${userEditBaseUrl}/${user.id}/edit`;
+        }
+
+        tbody.appendChild(row);
+    });
 }
 
 function renderPagination(paginated) {
-    paginationContainer.innerHTML = `
-        <button ${!paginated.prev_page_url ? 'disabled' : ''} data-page="${paginated.current_page - 1}">Anterior</button>
+    pagination.innerHTML = `
+        <button ${!paginated.prev_page_url ? 'disabled' : ''} data-page="${paginated.current_page - 1}">
+            Anterior
+        </button>
         <span>Página ${paginated.current_page} de ${paginated.last_page}</span>
-        <button ${!paginated.next_page_url ? 'disabled' : ''} data-page="${paginated.current_page + 1}">Siguiente</button>
+        <button ${!paginated.next_page_url ? 'disabled' : ''} data-page="${paginated.current_page + 1}">
+            Siguiente
+        </button>
     `;
 
-    paginationContainer.querySelectorAll('button[data-page]').forEach(btn => {
+    pagination.querySelectorAll('button[data-page]').forEach(btn => {
         btn.addEventListener('click', () => {
             const page = parseInt(btn.dataset.page);
             if (!isNaN(page)) loadUsers(page);

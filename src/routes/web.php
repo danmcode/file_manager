@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -36,14 +38,31 @@ Route::middleware('auth')
         )->name('profile.destroy');
 
         Route::get(
-            '/configuration',
-            [ConfigurationController::class, 'index']
-        )->name('configuration');
+            '/users',
+            [UserController::class, 'index']
+        )->name('users');
 
         Route::get(
-            '/users',
+            '/users/{id}/edit',
+            [UserController::class, 'edit']
+        )->name('users.edit');
+
+
+        Route::get(
+            '/users/get',
             [UserController::class, 'getUsers']
         )->name('users.get');
+
+        Route::get(
+            '/groups',
+            [GroupController::class, 'index']
+        )->name('groups');
+
+
+        Route::get(
+            '/roles',
+            [RoleController::class, 'index']
+        )->name('roles');
     });
 
 require __DIR__ . '/auth.php';

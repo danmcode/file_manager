@@ -1,26 +1,16 @@
 <x-app-layout>
-    <section>
-        <div class="py-12">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div>
-                    <header>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <header class="flex items-center justify-between mb-4">
                         <h2 class="text-lg font-medium text-gray-900">
-                            {{ __('Profile Information') }}
+                            {{ __('Usuarios') }}
                         </h2>
 
-                        <p class="mt-1 text-sm text-gray-600">
-                            {{ __("Update your account's profile information and email address.") }}
-                        </p>
-                    </header>lass="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <header>
-                        <h2 class="text-lg font-medium text-gray-900">
-                            {{ __('Profile Information') }}
-                        </h2>
-
-                        <p class="mt-1 text-sm text-gray-600">
-                            {{ __("Update your account's profile information and email address.") }}
-                        </p>
+                        <x-primary-button :href="route('users.create')">{{ __('Crear Usuario') }}</x-primary-button>
                     </header>
+                    <div class="border-b border-gray-300 w-full mt-2 mb-2"></div>
 
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -50,6 +40,9 @@
                                         <td class="px-6 py-4 text-center">
                                             <a href="#"
                                                 class="user-edit font-medium text-blue-600 dark:text-blue-500 hover:underline">Editar</a>
+
+                                            <a href="#"
+                                                class="user-delete font-medium text-blue-600 dark:text-blue-500 hover:underline">Eliminar</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -62,7 +55,6 @@
                 </div>
             </div>
         </div>
-    </section>
     </div>
     <script type="module" src="{{ asset('js/users/users.js') }}"></script>
 </x-app-layout>

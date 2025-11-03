@@ -15,6 +15,18 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
+                        {{ __('Usuarios') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('groups')" :active="request()->routeIs('groups')">
+                        {{ __('Grupos') }}
+                    </x-nav-link>
+
+                    <x-nav-link :href="route('roles')" :active="request()->routeIs('roles')">
+                        {{ __('Roles') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -40,10 +52,6 @@
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Perfil') }}
-                        </x-dropdown-link>
-
-                        <x-dropdown-link :href="route('configuration')">
-                            {{ __('Configuración') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -93,10 +101,6 @@
             <div class="mt-3 space-y-1">
                 <x-responsive-nav-link :href="route('profile.edit')">
                     {{ __('Perfil') }}
-                </x-responsive-nav-link>
-
-                <x-responsive-nav-link :href="route('configuration')">
-                    {{ __('Configuración') }}
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
