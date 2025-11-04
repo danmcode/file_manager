@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ConfigurationController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -143,6 +144,12 @@ Route::middleware('auth')
             '/roles/get',
             [RoleController::class, 'getRoles']
         )->name('roles.get');
+
+        Route::post(
+            '/files',
+            [FileController::class, 'store']
+        )->name('files.store');
+
 
     });
 
