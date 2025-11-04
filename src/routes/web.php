@@ -145,6 +145,11 @@ Route::middleware('auth')
             [RoleController::class, 'getRoles']
         )->name('roles.get');
 
+        Route::get(
+            '/files',
+            [FileController::class, 'index']
+        )->name('files');
+
         Route::post(
             '/files',
             [FileController::class, 'store']

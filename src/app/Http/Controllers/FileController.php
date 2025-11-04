@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreFilesRequest;
 use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class FileController extends Controller
@@ -14,6 +15,13 @@ class FileController extends Controller
     public function __construct(FileUploadService $fileUploadService)
     {
         $this->fileUploadService = $fileUploadService;
+    }
+
+    public function index()
+    {
+        $files = Auth::user()->files()->latest()->get();
+
+        return view('files.index', compact('files'));
     }
 
     public function store(StoreFilesRequest $request): RedirectResponse
