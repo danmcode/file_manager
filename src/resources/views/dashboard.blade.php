@@ -1,8 +1,12 @@
 <x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if (session('error'))
+            <div class="mb-4 mt-4 p-3 bg-red-100 border border-red-300 text-red-800 rounded-lg">
+                {{ session('error') }}
+            </div>
+            @endif
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-
                 <div class="p-6 bg-gray-50 border-b border-gray-200">
                     <h2 class="text-xl font-semibold text-gray-800 mb-4">Mi almacenamiento</h2>
 

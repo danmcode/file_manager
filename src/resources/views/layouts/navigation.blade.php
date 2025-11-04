@@ -12,14 +12,18 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    {{-- Dashboard --}}
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
+                    {{-- Mis Archivos (todos) --}}
                     <x-nav-link :href="route('files')" :active="request()->routeIs('files')">
                         {{ __('Mis archivos') }}
                     </x-nav-link>
 
+                    {{-- Solo para Administrador --}}
+                    @if(Auth::user()->role && Auth::user()->role->name === 'Administrador')
                     <x-nav-link :href="route('users')" :active="request()->routeIs('users')">
                         {{ __('Usuarios') }}
                     </x-nav-link>
@@ -31,6 +35,7 @@
                     <x-nav-link :href="route('roles')" :active="request()->routeIs('roles')">
                         {{ __('Roles') }}
                     </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -41,7 +46,6 @@
                         <button
                             class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
-
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20">
@@ -61,9 +65,8 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
-
                             <x-dropdown-link :href="route('logout')" onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                this.closest('form').submit();">
                                 {{ __('Cerrar sesión') }}
                             </x-dropdown-link>
                         </form>
@@ -90,14 +93,18 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
+            {{-- Dashboard --}}
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
+            {{-- Mis Archivos --}}
             <x-responsive-nav-link :href="route('files')" :active="request()->routeIs('files')">
                 {{ __('Mis archivos') }}
             </x-responsive-nav-link>
 
+            {{-- Solo Administrador --}}
+            @if(Auth::user()->role && Auth::user()->role->name === 'Administrador')
             <x-responsive-nav-link :href="route('users')" :active="request()->routeIs('users')">
                 {{ __('Usuarios') }}
             </x-responsive-nav-link>
@@ -109,6 +116,7 @@
             <x-responsive-nav-link :href="route('roles')" :active="request()->routeIs('roles')">
                 {{ __('Roles') }}
             </x-responsive-nav-link>
+            @endif
         </div>
 
         <!-- Responsive Settings Options -->
@@ -126,9 +134,8 @@
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
                     <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault();
-                                        this.closest('form').submit();">
+                        this.closest('form').submit();">
                         {{ __('Cerrar sesión') }}
                     </x-responsive-nav-link>
                 </form>
