@@ -25,7 +25,7 @@ class FileUploadService
         $parts = preg_split('/\s+/', trim($user->name));
         $first = strtolower($parts[0] ?? 'usuario');
         $last = strtolower($parts[1] ?? '');
-        return Str::slug("uploads/{$first}_{$last}", '_');
+        return "{$first}_{$last}";
     }
 
     private function getFileSizeMb(UploadedFile $file): float
@@ -60,10 +60,6 @@ class FileUploadService
 
         return DB::transaction(function () use ($file, $user, $folder, $fileSizeMb, $newTotal) {
 
-            // Asegurar carpeta
-            Storage::disk('public')->makeDirectory($folder);
-
-            // Guardar físicamente el archivo
             try {
                 $path = $file->store($folder, 'public');
             } catch (\Throwable $e) {
@@ -73,7 +69,6 @@ class FileUploadService
             }
 
             try {
-                // Crear registro del archivo
                 File::create([
                     'user_id' => $user->id,
                     'file_name' => $file->getClientOriginalName(),
@@ -83,7 +78,6 @@ class FileUploadService
                     'created_by' => $user->id,
                 ]);
 
-                // ⚠️ Reconsultar usuario fresco desde DB
                 $freshUser = User::find($user->id);
                 $freshUser->used_space_mb = round($newTotal, 2);
                 $freshUser->updated_by = $user->id;
@@ -91,12 +85,11 @@ class FileUploadService
 
                 return $path;
             } catch (\Throwable $e) {
-                // Limpiar archivo físico si la DB falla
                 if (isset($path) && Storage::disk('public')->exists($path)) {
                     Storage::disk('public')->delete($path);
                 }
 
-                throw $e; // rollback automático
+                throw $e;
             }
         });
     }
