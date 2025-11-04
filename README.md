@@ -8,6 +8,9 @@ El objetivo principal del proyecto es ofrecer una plataforma escalable y segura 
 - Gestionar archivos con almacenamiento estructurado.
 - Administrar grupos y usuarios desde una interfaz simple y eficiente.
 
+### Diagrama entidad relación
+![File Manager Screenshot](./images/filemanager.png)
+
 ---
 
 ## ⚙️ Tecnologías utilizadas y su justificación
@@ -197,4 +200,5 @@ Este proyecto se distribuye bajo la licencia MIT.
 Consulta el archivo `LICENSE` para más información.
 
 ---
+
 
