@@ -181,6 +181,14 @@ Abre en tu navegador:
 
 Si tu navegador advierte sobre el certificado, puedes continuar de forma segura (ya que es un entorno local).
 
+Para iniciar sesión se usan los siguientes usuarios:
+
+### Administrador
+email: admin@fileadmin.local password: password
+
+### Usuario
+email: marketing@fileadmin.local password: password
+
 ---
 
 ## 🧾 Licencia
@@ -189,3 +197,4 @@ Este proyecto se distribuye bajo la licencia MIT.
 Consulta el archivo `LICENSE` para más información.
 
 ---
+
